@@ -14,9 +14,8 @@ if st.button("Procesar Video", type="primary"):
     if not url:
         st.warning("Por favor, introduce un enlace válido.")
     else:
-        with st.spinner("Procesando y uniendo audio/video... Esto puede tardar unos segundos."):
+        with st.spinner("Procesando video... Esto puede tardar unos segundos."):
             with tempfile.TemporaryDirectory() as tmp_dir:
-                # Opciones avanzadas que combinan video+audio con ffmpeg o buscan el mejor formato simple disponible
                 ydl_opts = {
                     'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
                     'outtmpl': os.path.join(tmp_dir, '%(title)s.%(ext)s'),
@@ -24,11 +23,14 @@ if st.button("Procesar Video", type="primary"):
                     'no_warnings': True,
                     'nocheckcertificate': True,
                     'geo_bypass': True,
-                    # Evitar restricciones de servidor agregando encabezados de navegador común
+                    # Forzar a yt-dlp a identificarse como la app móvil oficial para omitir bloqueos en la nube
+                    'extractor_args': {
+                        'youtube': {
+                            'player_client': ['android', 'ios'],
+                        }
+                    },
                     'http_headers': {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        'Accept-Language': 'en-us,en;q=0.5',
+                        'User-Agent': 'com.google.android.youtube/19.09.37 (Linux; U; Android 11; en_US)',
                     }
                 }
                 
