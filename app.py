@@ -15,10 +15,10 @@ if st.button("Procesar Video", type="primary"):
         st.warning("Por favor, introduce un enlace válido.")
     else:
         with st.spinner("Procesando y preparando el archivo... Esto puede tardar unos momentos."):
-            # Directorio temporal para almacenar el video descargado en la nube
             with tempfile.TemporaryDirectory() as tmp_dir:
+                # Opciones flexibilizadas para aceptar cualquier formato disponible
                 ydl_opts = {
-                    'format': 'best[ext=mp4]/best',
+                    'format': 'b/best',
                     'outtmpl': os.path.join(tmp_dir, '%(title)s.%(ext)s'),
                     'quiet': True,
                     'no_warnings': True,
@@ -29,18 +29,18 @@ if st.button("Procesar Video", type="primary"):
                         info = ydl.extract_info(url, download=True)
                         filename = ydl.prepare_filename(info)
                         video_title = info.get('title', 'video')
+                        ext = info.get('ext', 'mp4')
 
                     with open(filename, "rb") as file:
                         video_bytes = file.read()
 
                     st.success(f"¡Video procesado con éxito: **{video_title}**!")
                     
-                    # Botón nativo del navegador para guardar el archivo
                     st.download_button(
-                        label="⬇️ Descargar archivo MP4",
+                        label=f"⬇️ Descargar archivo ({ext.upper()})",
                         data=video_bytes,
-                        file_name=f"{video_title}.mp4",
-                        mime="video/mp4"
+                        file_name=f"{video_title}.{ext}",
+                        mime=f"video/{ext}"
                     )
                 except Exception as e:
                     st.error("Ocurrió un error al procesar el video.")
