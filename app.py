@@ -16,12 +16,16 @@ if st.button("Procesar Video", type="primary"):
     else:
         with st.spinner("Procesando y preparando el archivo... Esto puede tardar unos momentos."):
             with tempfile.TemporaryDirectory() as tmp_dir:
-                # Opciones flexibilizadas para aceptar cualquier formato disponible
+                # 'format': 'worst/best' o 'b' obliga a tomar un solo archivo que contenga video y audio sin requerir procesamiento ni formatos específicos
                 ydl_opts = {
-                    'format': 'b/best',
+                    'format': 'worst/b/best', 
                     'outtmpl': os.path.join(tmp_dir, '%(title)s.%(ext)s'),
                     'quiet': True,
                     'no_warnings': True,
+                    'nocheckcertificate': True,
+                    'ignoreerrors': False,
+                    'logtostderr': False,
+                    'geo_bypass': True,
                 }
                 
                 try:
