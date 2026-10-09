@@ -17,20 +17,20 @@ if st.button("Procesar Video", type="primary"):
         with st.spinner("Procesando video... Esto puede tardar unos segundos."):
             with tempfile.TemporaryDirectory() as tmp_dir:
                 ydl_opts = {
-                    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+                    'format': 'b/best',  # Formato directo unificado para evitar bloqueos 403 en servidores
                     'outtmpl': os.path.join(tmp_dir, '%(title)s.%(ext)s'),
                     'quiet': True,
                     'no_warnings': True,
                     'nocheckcertificate': True,
                     'geo_bypass': True,
-                    # Forzar a yt-dlp a identificarse como la app móvil oficial para omitir bloqueos en la nube
+                    # Cambio a clientes móviles para evadir el bloqueo de IP de centro de datos
                     'extractor_args': {
                         'youtube': {
-                            'player_client': ['android', 'ios'],
+                            'player_client': ['mweb', 'ios'],
                         }
                     },
                     'http_headers': {
-                        'User-Agent': 'com.google.android.youtube/19.09.37 (Linux; U; Android 11; en_US)',
+                        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/605.1.15',
                     }
                 }
                 
